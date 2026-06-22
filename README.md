@@ -2,8 +2,6 @@
 
 一个用 C++17 实现的低延迟交易所撮合模拟器，包含限价订单簿、价格-时间优先撮合、撤单、WebSocket 实时行情推送、浏览器盘口监控页和可复现压测。
 
-这个项目的重点不是“写一个玩具订单簿”，而是把交易系统里几个面试官会追问的点都落到代码里：撮合路径如何保持确定性、同价位如何保证 FIFO、撤单如何快速定位、行情如何在每次状态变化后推送，以及吞吐和延迟如何量化。
-
 ## 项目亮点
 
 - 使用 C++17 实现 limit-order-book matching engine，支持 market order、limit order 和 cancellation。
@@ -107,7 +105,6 @@ latency_p99_ns=1709
 latency_max_ns=106208
 ```
 
-这说明在当前模拟负载下吞吐约为 1.2M orders/sec，高于项目目标中的 50,000+ orders/sec。实际数值会受 CPU、编译器、系统负载影响，所以 README 里保留了可复现命令而不是只写静态结论。
 
 ## 核心设计说明
 
@@ -147,20 +144,4 @@ using AskBook = std::map<Price, std::deque<OrderPtr>>;
   "trades": [{"resting": 2, "aggressor": 9, "price": 10010, "qty": 10, "ts": 123456}],
   "book": {"type": "book", "symbol": "SIM-USD", "seq": 9, "bids": [], "asks": []}
 }
-```
-
-## 面试可讲点
-
-- 为什么价格使用整数 tick 而不是 double：避免浮点比较误差。
-- 为什么撮合线程外层使用 mutex：当前版本目标是单 symbol 串行确定性撮合，后续可以按 symbol 分片扩展。
-- 为什么撤单采用惰性删除：降低低延迟路径上的随机队列删除成本。
-- 为什么 WebSocket 服务没有引入第三方库：保持项目可编译、可审查，同时展示对协议握手和帧格式的理解。
-- 如何扩展到多交易对：每个 symbol 一个 `MatchingEngine`，上层 gateway 按 symbol 路由。
-
-## 验证状态
-
-```text
-make all  ✅
-make test ✅ order_book_tests passed
-benchmark ✅ throughput_ops_sec=1208228
 ```
