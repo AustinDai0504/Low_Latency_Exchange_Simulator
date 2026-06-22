@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img" aria-labelledby="title desc">
+  <title id="title">Low-Latency Exchange Simulator Architecture</title>
+  <desc id="desc">Architecture diagram showing clients, gateway, matching engine, order book, market data publisher, WebSocket streaming, benchmark and monitoring viewer.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#334155"/>
+    </marker>
+    <style>
+      .bg{fill:#f8fafc}.box{fill:#fff;stroke:#cbd5e1;stroke-width:2;rx:8}.core{fill:#eef6ff;stroke:#2563eb}.md{fill:#ecfdf5;stroke:#059669}.bench{fill:#fff7ed;stroke:#ea580c}.t{font:600 18px Arial,sans-serif;fill:#0f172a}.s{font:14px Arial,sans-serif;fill:#334155}.m{font:12px Arial,sans-serif;fill:#64748b}.line{stroke:#334155;stroke-width:2;fill:none;marker-end:url(#arrow)}.dash{stroke:#64748b;stroke-width:2;fill:none;stroke-dasharray:7 7;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="620"/>
+  <text x="40" y="48" class="t">Low-Latency Exchange Simulator</text>
+  <text x="40" y="74" class="s">C++17 limit order book + WebSocket market data + benchmark suite</text>
+
+  <rect x="50" y="140" width="220" height="110" class="box"/>
+  <text x="76" y="178" class="t">Order Producer</text>
+  <text x="76" y="204" class="s">CLI / simulated workloads</text>
+  <text x="76" y="228" class="m">limit, market, cancel</text>
+
+  <rect x="360" y="130" width="260" height="130" class="box core"/>
+  <text x="390" y="170" class="t">MatchingEngine</text>
+  <text x="390" y="198" class="s">single-symbol mutex boundary</text>
+  <text x="390" y="222" class="m">validates requests and serializes book mutations</text>
+
+  <rect x="710" y="110" width="300" height="170" class="box core"/>
+  <text x="742" y="150" class="t">Limit Order Book</text>
+  <text x="742" y="180" class="s">bids: descending price map</text>
+  <text x="742" y="204" class="s">asks: ascending price map</text>
+  <text x="742" y="228" class="m">deque per price keeps FIFO time priority</text>
+  <text x="742" y="252" class="m">order id index enables fast cancel</text>
+
+  <rect x="360" y="360" width="260" height="120" class="box md"/>
+  <text x="390" y="400" class="t">MarketDataPublisher</text>
+  <text x="390" y="428" class="s">serializes snapshot + trades</text>
+  <text x="390" y="452" class="m">JSON update after every accepted event</text>
+
+  <rect x="710" y="360" width="300" height="120" class="box md"/>
+  <text x="742" y="400" class="t">WebSocketServer</text>
+  <text x="742" y="428" class="s">RFC6455 handshake + text frames</text>
+  <text x="742" y="452" class="m">broadcasts real-time book updates</text>
+
+  <rect x="50" y="370" width="220" height="100" class="box bench"/>
+  <text x="76" y="410" class="t">Benchmark</text>
+  <text x="76" y="438" class="s">200k mixed orders</text>
+  <text x="76" y="462" class="m">throughput + p50/p99 latency</text>
+
+  <rect x="710" y="510" width="300" height="70" class="box"/>
+  <text x="742" y="548" class="t">Market Viewer</text>
+  <text x="742" y="572" class="m">public/market_viewer.html</text>
+
+  <path d="M270 195 H350" class="line"/>
+  <path d="M620 195 H700" class="line"/>
+  <path d="M860 280 V330 Q860 360 710 398" class="line"/>
+  <path d="M620 420 H700" class="line"/>
+  <path d="M860 480 V500" class="line"/>
+  <path d="M270 420 H350" class="dash"/>
+</svg>

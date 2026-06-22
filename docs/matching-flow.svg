@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="720" viewBox="0 0 980 720" role="img" aria-labelledby="title desc">
+  <title id="title">Order Matching Flow</title>
+  <desc id="desc">Flow chart for validating, matching, resting, cancelling and publishing order book updates.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#475569"/>
+    </marker>
+    <style>
+      .bg{fill:#ffffff}.node{fill:#f8fafc;stroke:#cbd5e1;stroke-width:2;rx:8}.decision{fill:#eff6ff;stroke:#2563eb;stroke-width:2}.out{fill:#ecfdf5;stroke:#059669;stroke-width:2;rx:8}.reject{fill:#fff1f2;stroke:#e11d48;stroke-width:2;rx:8}.t{font:600 16px Arial,sans-serif;fill:#0f172a}.s{font:13px Arial,sans-serif;fill:#334155}.line{stroke:#475569;stroke-width:2;fill:none;marker-end:url(#arrow)}.label{font:12px Arial,sans-serif;fill:#64748b}
+    </style>
+  </defs>
+  <rect class="bg" width="980" height="720"/>
+  <text x="40" y="44" class="t">Order Matching Flow</text>
+
+  <rect x="370" y="80" width="240" height="72" class="node"/>
+  <text x="410" y="112" class="t">Receive Request</text>
+  <text x="410" y="136" class="s">NewOrder or CancelOrder</text>
+
+  <rect x="370" y="198" width="240" height="76" class="decision"/>
+  <text x="412" y="230" class="t">Validate</text>
+  <text x="412" y="254" class="s">qty, price, duplicate id</text>
+
+  <rect x="670" y="200" width="210" height="72" class="reject"/>
+  <text x="706" y="232" class="t">Reject</text>
+  <text x="706" y="256" class="s">return message + snapshot</text>
+
+  <rect x="370" y="320" width="240" height="86" class="decision"/>
+  <text x="410" y="352" class="t">Cross Best Price?</text>
+  <text x="410" y="376" class="s">market orders always cross</text>
+  <text x="410" y="396" class="s">limit uses price constraint</text>
+
+  <rect x="80" y="320" width="220" height="86" class="node"/>
+  <text x="118" y="352" class="t">Rest Remaining</text>
+  <text x="118" y="376" class="s">map[price].push_back</text>
+  <text x="118" y="396" class="s">preserves FIFO priority</text>
+
+  <rect x="370" y="462" width="240" height="86" class="node"/>
+  <text x="412" y="494" class="t">Fill Resting Order</text>
+  <text x="412" y="518" class="s">trade at passive price</text>
+  <text x="412" y="538" class="s">decrement remaining qty</text>
+
+  <rect x="670" y="462" width="210" height="86" class="node"/>
+  <text x="706" y="494" class="t">Cancel Path</text>
+  <text x="706" y="518" class="s">lookup order id index</text>
+  <text x="706" y="538" class="s">mark inactive</text>
+
+  <rect x="370" y="602" width="240" height="72" class="out"/>
+  <text x="410" y="634" class="t">Publish Update</text>
+  <text x="410" y="658" class="s">trades + depth snapshot JSON</text>
+
+  <path d="M490 152 V188" class="line"/>
+  <path d="M610 236 H660" class="line"/>
+  <text x="622" y="224" class="label">invalid</text>
+  <path d="M490 274 V310" class="line"/>
+  <path d="M370 363 H310" class="line"/>
+  <text x="318" y="350" class="label">no</text>
+  <path d="M490 406 V452" class="line"/>
+  <text x="502" y="432" class="label">yes</text>
+  <path d="M490 548 V592" class="line"/>
+  <path d="M610 505 H660" class="line"/>
+  <path d="M775 548 V638 H620" class="line"/>
+  <path d="M190 406 V638 H360" class="line"/>
+  <path d="M370 116 H330 V505 H360" class="line"/>
+  <text x="248" y="490" class="label">cancel</text>
+</svg>
